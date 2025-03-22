@@ -1,0 +1,535 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1a472a, #2d5a3f);
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 1200px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #4CAF50;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.2rem;
+    color: #a5d6a7;
+}
+
+.game-area {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+#game-world {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    aspect-ratio: 16/9;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#game-world::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232d5a3f"/><circle cx="50" cy="50" r="40" fill="%231a472a"/></svg>') repeat;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+
+.info-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.mission-info, .inventory {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #4CAF50;
+    margin-bottom: 1rem;
+}
+
+#tool-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.5rem;
+}
+
+.tool-button {
+    font-size: 2rem;
+    padding: 1rem;
+    background: rgba(76, 175, 80, 0.2);
+    border: 2px solid #4CAF50;
+    transition: all 0.3s ease;
+}
+
+.tool-button:hover {
+    background: rgba(76, 175, 80, 0.4);
+    transform: translateY(-2px);
+}
+
+.tool-button.selected {
+    background: #4CAF50;
+    transform: scale(1.1);
+}
+
+.tree {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #2d5a3f;
+    border-radius: 50% 50% 0 50%;
+    transform: rotate(45deg);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+.tree::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background: #4CAF50;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.water-source {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.water-source.polluted {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    box-shadow: 0 0 20px rgba(44, 62, 80, 0.5);
+}
+
+.water-source.polluted::before {
+    content: '💧';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    filter: grayscale(1) brightness(0.5);
+}
+
+.water-source.clean {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+}
+
+.water-source.clean::before {
+    content: '💧';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+}
+
+.water-source::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    animation: ripple 2s infinite;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.recycling-bin {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: #34495e;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    box-shadow: 0 0 20px rgba(52, 73, 94, 0.5);
+    z-index: 10;
+}
+
+.recycling-bin::before {
+    content: '♻️';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.recyclable {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    z-index: 5;
+}
+
+.recyclable:hover {
+    transform: scale(1.2);
+}
+
+.recyclable::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px dashed #4CAF50;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.recyclable:hover::after {
+    opacity: 1;
+}
+
+.solar-spot {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px dashed #4CAF50;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.solar-spot::before {
+    content: '☀️';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    opacity: 0.5;
+}
+
+.solar-spot.has-panel {
+    background: linear-gradient(135deg, #f1c40f, #f39c12);
+    border-style: solid;
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.5);
+}
+
+.solar-spot.has-panel::before {
+    content: '☀️';
+    opacity: 1;
+}
+
+.solar-spot.has-panel::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+    );
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.solar-spot.has-panel {
+    --energy-level: 0%;
+    background: linear-gradient(135deg, 
+        #f1c40f var(--energy-level),
+        #f39c12 var(--energy-level)
+    );
+}
+
+.combo-text {
+    position: absolute;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f1c40f;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    animation: comboFloat 1s ease-out forwards;
+    z-index: 100;
+}
+
+@keyframes comboFloat {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    80% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .info-panel {
+        grid-template-columns: 1fr;
+    }
+    
+    .game-container {
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+#tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+#tutorial-message {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2d5a3f;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    text-align: center;
+    max-width: 80%;
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#tutorial-controls {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    z-index: 1001;
+}
+
+#tutorial-controls button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#tutorial-controls button:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+
+#tutorial-controls #tutorial-skip {
+    background: #e74c3c;
+}
+
+#tutorial-controls #tutorial-skip:hover {
+    background: #c0392b;
+}
+
+.tutorial-highlight {
+    position: relative;
+    z-index: 1002;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+    }
+}
+
+#tutorial-button {
+    background: #2d5a3f;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#tutorial-button:hover {
+    background: #1a472a;
+    transform: translateY(-2px);
+}
+
+#music-toggle {
+    background: #2d5a3f;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+#music-toggle:hover {
+    background: #1a472a;
+    transform: translateY(-2px);
+}
+
+#music-volume {
+    width: 100px;
+    height: 5px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    outline: none;
+}
+
+#music-volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#music-volume::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+#music-volume::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+#music-volume::-moz-range-thumb:hover {
+    transform: scale(1.2);
+} 

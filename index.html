@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoQuest: Save the Planet</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>🌍 EcoQuest: Save the Planet</h1>
+            <div class="stats">
+                <span id="score">Score: 0</span>
+                <span id="level">Level: 1</span>
+            </div>
+        </header>
+
+        <div class="game-area">
+            <div id="game-world"></div>
+            <div class="info-panel">
+                <div class="mission-info">
+                    <h2>Current Mission</h2>
+                    <p id="mission-text">Welcome to EcoQuest! Your mission is to help save the planet by solving environmental challenges.</p>
+                </div>
+                <div class="inventory">
+                    <h2>Tools</h2>
+                    <div id="tool-buttons"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="start-game">Start Game</button>
+            <button id="pause-game">Pause</button>
+            <button id="sound-toggle">🔊</button>
+        </div>
+    </div>
+
+    <script src="sounds.js"></script>
+    <script src="game.js"></script>
+</body>
+</html> 
