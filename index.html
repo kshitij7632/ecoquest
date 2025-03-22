@@ -39,5 +39,11 @@
 
     <script src="sounds.js"></script>
     <script src="game.js"></script>
+    <script>
+        // Initialize the game when the page loads
+        window.addEventListener('load', () => {
+            window.game = new EcoQuest();
+        });
+    </script>
 </body>
 </html> 
